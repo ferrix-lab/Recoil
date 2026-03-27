@@ -1,6 +1,6 @@
 # Recoil
 
-> ***System Tray // Active Recoil***
+> ***System Tray // Active Recoil..***
 
 Recoil is a modern, tactical-themed system utility built with **Tauri v2** and **React**. It allows you to instantly identify and terminate processes occupying specific network ports on your machine. With a sleek, dark-mode UI, it provides real-time visibility into your system's network activity and resource usage.
 
