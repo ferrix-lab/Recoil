@@ -5,6 +5,12 @@
   "windows": ["main"],
   "permissions": [
     "core:default",
-    "opener:default"
+    "opener:default",
+    "updater:default",
+    "core:process:allow-relaunch",
+    {
+      "identifier": "opener:allow-open-url",
+      "allow": [{ "url": "https://github.com/CodeMaverick-143/Recoil" }]
+    }
   ]
 }

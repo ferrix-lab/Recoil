@@ -26,6 +26,15 @@ struct PortInfo {
     protocol: String,
 }
 
+#[derive(Serialize)]
+struct ProcessInfo {
+    pid: u32,
+    name: String,
+    app_name: Option<String>,
+    cpu_usage: f32,
+    memory_usage: u64,
+}
+
 fn clean_process_name(name: &str) -> String {
     name.replace("\\x20", " ")
         .replace("\\", "")
@@ -159,15 +168,82 @@ fn kill_process(pid: u32) -> Result<(), String> {
     }
 }
 
+#[tauri::command]
+fn get_all_processes(state: State<AppState>) -> Vec<ProcessInfo> {
+    let mut sys = state.sys.lock().unwrap();
+    sys.refresh_processes(ProcessesToUpdate::All, true);
+
+    sys.processes()
+        .values()
+        .map(|p| {
+            let exe_path = p
+                .exe()
+                .map(|path| path.to_string_lossy().to_string())
+                .unwrap_or_default();
+            let mut app_name = None;
+
+            if exe_path.contains(".app/") {
+                let parts: Vec<&str> = exe_path.split(".app/").collect();
+                if let Some(path_before) = parts.first() {
+                    if let Some(name) = path_before.split('/').last() {
+                        app_name = Some(name.to_string());
+                    }
+                }
+            } else if exe_path.contains("/Applications/") {
+                let parts: Vec<&str> = exe_path.split("/Applications/").collect();
+                if let Some(sub) = parts.get(1) {
+                    if let Some(name) = sub.split('/').next() {
+                        app_name = Some(name.to_string());
+                    }
+                }
+            }
+
+            ProcessInfo {
+                pid: p.pid().as_u32(),
+                name: clean_process_name(&p.name().to_string_lossy()),
+                app_name,
+                cpu_usage: p.cpu_usage(),
+                memory_usage: p.memory(),
+            }
+        })
+        .collect()
+}
+
+#[tauri::command]
+fn kill_all_processes(pids: Vec<u32>) -> Result<(), String> {
+    let mut errors = Vec::new();
+    for pid in pids {
+        match Command::new("kill").args(["-9", &pid.to_string()]).status() {
+            Ok(status) if !status.success() => {
+                errors.push(format!("PID {}: exit status {}", pid, status));
+            }
+            Err(e) => {
+                errors.push(format!("PID {}: {}", pid, e));
+            }
+            _ => {}
+        }
+    }
+
+    if errors.is_empty() {
+        Ok(())
+    } else {
+        Err(format!("Some targets survived: {}", errors.join(", ")))
+    }
+}
+
 fn main() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_updater::Builder::new().build())
         .manage(AppState {
             sys: Mutex::new(System::new_all()),
         })
         .invoke_handler(tauri::generate_handler![
             get_active_ports,
             kill_process,
-            get_global_stats
+            get_global_stats,
+            get_all_processes,
+            kill_all_processes
         ])
         .run(tauri::generate_context!())
         .expect("error running tauri application");

@@ -13,11 +13,12 @@
     "macOSPrivateApi": true,
     "windows": [
       {
-        "title": "Recoil",
+        "title": "",
         "width": 400,
         "height": 600,
-        "decorations": false,
-        "transparent": true
+        "decorations": true,
+        "transparent": true,
+        "titleBarStyle": "Overlay"
       }
     ],
     "security": {
@@ -27,6 +28,7 @@
   "bundle": {
     "active": true,
     "targets": "all",
+    "createUpdaterArtifacts": true,
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
@@ -34,5 +36,13 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ]
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEVBMTI1M0VGMzQxMjA4NjMKUldSakNCSTA3MU1TNms4eU5hdUpxUDMzOTRqVEc5d3M2SlVqc25aSUV6RHhkYjRtM2MrcW1tTzIK",
+      "endpoints": [
+        "https://github.com/CodeMaverick-143/Recoil/releases/latest/download/latest.json"
+      ]
+    }
   }
 }
