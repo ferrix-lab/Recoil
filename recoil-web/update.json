@@ -1,0 +1,18 @@
+{
+  "releases": [
+    {
+      "version": "v0.6.7",
+      "date": "2026-04-21",
+      "title": "Tactical Intelligence & Auto-Updater",
+      "summary": "This version introduces a comprehensive auto-update system and significant UI refinements to ensure Recoil feels like a native macOS utility.",
+      "notes": [
+        "Implemented secure Auto-Updater system for macOS and Linux.",
+        "Created an automated GitHub Actions release pipeline for verified builds.",
+        "New premium sliding tab switcher for seamless view transitions.",
+        "Integrated interactive GitHub repository link in the footer.",
+        "Refined responsive layouts for ultra-narrow viewport support (Sidebar Mode).",
+        "Resolved Tauri dependency mismatches to stabilize production builds."
+      ]
+    }
+  ]
+}
