@@ -1,8 +1,9 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Search, Activity, Wifi, Cpu, Terminal, LayoutList, Target, Box, Github } from "lucide-react";
 import { openUrl } from "@tauri-apps/plugin-opener";
+// import { trackEvent } from "@aptabase/tauri";
 import { SniperButton } from "./components/SniperButton";
 import { TelemetryBar } from "./components/TelemetryBar";
 import { UpdatePrompt } from "./components/UpdatePrompt";
@@ -50,6 +51,7 @@ export default function App() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [viewMode === "ports" ? "active_ports" : "all_processes"] });
+      // trackEvent("single_kill_executed", { mode: viewMode });
     },
     onError: (error) => {
       console.error("Failed to eliminate target:", error);
@@ -61,9 +63,10 @@ export default function App() {
     mutationFn: async (pids: number[]) => {
       await invoke("kill_all_processes", { pids });
     },
-    onSuccess: () => {
+    onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: [viewMode === "ports" ? "active_ports" : "all_processes"] });
       setSearch("");
+      // trackEvent("batch_kill_executed", { count: variables.length, mode: viewMode });
     },
     onError: (error) => {
       console.error("Batch elimination failed:", error);
@@ -90,14 +93,24 @@ export default function App() {
 
   const isLoading = viewMode === "ports" ? isLoadingPorts : isLoadingAll;
 
+  // Track session start
+  useEffect(() => {
+    // trackEvent("app_started", { platform: window.navigator.platform });
+  }, []);
+
+  // Track view changes
+  useEffect(() => {
+    // trackEvent("view_changed", { mode: viewMode });
+  }, [viewMode]);
+
   // Format bytes to MB
   const formatMB = (bytes: number) => (bytes / 1024 / 1024).toFixed(1);
 
   return (
     <div className="flex h-screen flex-col overflow-hidden bg-background text-slate-100 font-sans selection:bg-red-900/30 selection:text-red-100">
       {/* Header / Title Bar */}
-      <div 
-        data-tauri-drag-region 
+      <div
+        data-tauri-drag-region
         className="relative z-10 border-b border-white/[0.05] bg-slate-950/40 backdrop-blur-xl"
       >
         <div className="mx-auto flex h-[56px] max-w-[900px] items-center justify-between px-4 pt-4">
@@ -110,13 +123,13 @@ export default function App() {
 
           <div className="relative flex items-center gap-1 rounded-lg border border-white/5 bg-slate-950/80 p-1 shadow-inner">
             {/* Sliding Indicator */}
-            <div 
+            <div
               className={clsx(
                 "absolute h-[calc(100%-8px)] w-[calc(50%-6px)] rounded-md bg-red-600 transition-all duration-300 ease-out shadow-[0_0_15px_rgba(220,38,38,0.4)]",
                 viewMode === "ports" ? "left-1" : "left-[calc(50%+2px)]"
               )}
             />
-            
+
             <button
               onClick={() => setViewMode("ports")}
               className={clsx(
@@ -207,7 +220,7 @@ export default function App() {
                         <h3 className="truncate text-xs font-bold tracking-tight text-slate-200 group-hover:text-white md:text-sm">
                           {item.name}
                         </h3>
-                        
+
                         {viewMode === "all" && (item as ProcessInfo).app_name && (
                           <div className="flex items-center gap-1.5 rounded-full bg-red-500/10 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider text-red-500 ring-1 ring-red-500/30 md:text-[10px]">
                             <Box className="h-2.5 w-2.5" />
@@ -268,7 +281,7 @@ export default function App() {
           <div className="flex-1">
             <TelemetryBar />
           </div>
-          <button 
+          <button
             onClick={() => openUrl("https://github.com/CodeMaverick-143/Recoil")}
             className="group ml-4 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg border border-white/5 bg-white/[0.02] text-slate-600 transition-all hover:border-white/10 hover:bg-white/[0.05] hover:text-white"
             title="Source Code"
