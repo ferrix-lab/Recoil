@@ -15,12 +15,12 @@ name = "port_killer_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
-tauri-build = { version = "2", features = [] }
+tauri-build = { version = "2.10", features = [] }
 
 [dependencies]
-tauri = { version = "2", features = ["macos-private-api"] }
-tauri-plugin-opener = "2"
-tauri-plugin-updater = "2"
+tauri = { version = "2.10", features = ["macos-private-api"] }
+tauri-plugin-opener = "2.0"
+tauri-plugin-updater = "2.10"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 sysinfo = "0.33"
