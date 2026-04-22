@@ -1,6 +1,19 @@
 {
   "releases": [
     {
+      "version": "v1.4.3",
+      "date": "2026-04-22",
+      "title": "Precision Monitoring & Tactical Stability",
+      "summary": "This release focuses on monitoring excellence and platform stability, integrating privacy-first analytics and fixing core dependencies.",
+      "notes": [
+        "Integrated Aptabase for advanced, privacy-conscious session and event tracking.",
+        "Resolved critical build failure by pinning to a stable crates.io plugin release.",
+        "Upgraded backend core to use tokio for improved async concurrency.",
+        "Implemented boot success and process interaction telemetry.",
+        "Unified cross-platform versioning for synchronized release management."
+      ]
+    },
+    {
       "version": "v0.6.7",
       "date": "2026-04-21",
       "title": "Tactical Intelligence & Auto-Updater",

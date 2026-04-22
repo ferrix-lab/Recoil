@@ -16,7 +16,7 @@ import { ArrowRight, Copy, Check } from "lucide-react";
         >
             <span class="w-2 h-2 rounded-full bg-recoil-red animate-pulse"
             ></span>
-            <span>v0.6.7 Available Now</span>
+            <span>v1.4.3 Available Now</span>
         </div>
 
         <h1
@@ -124,14 +124,14 @@ import { ArrowRight, Copy, Check } from "lucide-react";
 
     if (platform.includes("mac") || userAgent.includes("mac")) {
         txt!.textContent = "Download for macOS";
-        btn.href = `${BASE_URL}/Recoil_0.1.0_universal.dmg`;
+        btn.href = `${BASE_URL}/Recoil_1.4.3_universal.dmg`;
         macCmd?.classList.remove("hidden");
     } else if (platform.includes("win") || userAgent.includes("windows")) {
         txt!.textContent = "Download for Windows";
-        btn.href = `${BASE_URL}/Recoil_0.1.0_x64-setup.exe`;
+        btn.href = `${BASE_URL}/Recoil_1.4.3_x64-setup.exe`;
     } else if (platform.includes("linux") || userAgent.includes("linux")) {
         txt!.textContent = "Download for Linux";
-        btn.href = `${BASE_URL}/Recoil_0.1.0_amd64.deb`;
+        btn.href = `${BASE_URL}/Recoil_1.4.3_amd64.deb`;
     }
 
     // Copy functionality
