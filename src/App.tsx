@@ -3,7 +3,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Search, Activity, Wifi, Cpu, Terminal, LayoutList, Target, Box, Github } from "lucide-react";
 import { openUrl } from "@tauri-apps/plugin-opener";
-// import { trackEvent } from "@aptabase/tauri";
+import { trackEvent } from "@aptabase/tauri";
 import { SniperButton } from "./components/SniperButton";
 import { TelemetryBar } from "./components/TelemetryBar";
 import { UpdatePrompt } from "./components/UpdatePrompt";
@@ -51,7 +51,7 @@ export default function App() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [viewMode === "ports" ? "active_ports" : "all_processes"] });
-      // trackEvent("single_kill_executed", { mode: viewMode });
+      trackEvent("single_kill_executed", { mode: viewMode });
     },
     onError: (error) => {
       console.error("Failed to eliminate target:", error);
@@ -66,7 +66,7 @@ export default function App() {
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: [viewMode === "ports" ? "active_ports" : "all_processes"] });
       setSearch("");
-      // trackEvent("batch_kill_executed", { count: variables.length, mode: viewMode });
+      trackEvent("batch_kill_executed", { count: variables.length, mode: viewMode });
     },
     onError: (error) => {
       console.error("Batch elimination failed:", error);
@@ -95,12 +95,12 @@ export default function App() {
 
   // Track session start
   useEffect(() => {
-    // trackEvent("app_started", { platform: window.navigator.platform });
+    trackEvent("app_started", { platform: window.navigator.platform });
   }, []);
 
   // Track view changes
   useEffect(() => {
-    // trackEvent("view_changed", { mode: viewMode });
+    trackEvent("view_changed", { mode: viewMode });
   }, [viewMode]);
 
   // Format bytes to MB

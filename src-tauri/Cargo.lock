@@ -3112,7 +3112,7 @@ dependencies = [
 
 [[package]]
 name = "recoil"
-version = "0.1.0"
+version = "1.4.3"
 dependencies = [
  "serde",
  "serde_json",
@@ -3122,6 +3122,7 @@ dependencies = [
  "tauri-plugin-aptabase",
  "tauri-plugin-opener",
  "tauri-plugin-updater",
+ "tokio",
 ]
 
 [[package]]
@@ -4174,7 +4175,8 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-aptabase"
 version = "1.0.0"
-source = "git+https://github.com/aptabase/tauri-plugin-aptabase#de6df6b8671568aad53eabaf4b49207a3d6c5622"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "075ebe083b5f311bdfbf436f8383d316dfb12267be5fd977b57d7701bdb99987"
 dependencies = [
  "futures",
  "log",
@@ -4459,9 +4461,23 @@ dependencies = [
  "bytes",
  "libc",
  "mio",
+ "parking_lot",
  "pin-project-lite",
+ "signal-hook-registry",
  "socket2",
+ "tokio-macros",
  "windows-sys 0.61.2",
+]
+
+[[package]]
+name = "tokio-macros"
+version = "2.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5c55a2eff8b69ce66c84f85e1da1c233edc36ceb85a2058d11b0d6a3c7e7569c"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.113",
 ]
 
 [[package]]

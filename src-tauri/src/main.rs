@@ -231,12 +231,19 @@ fn kill_all_processes(pids: Vec<u32>) -> Result<(), String> {
     }
 }
 
-fn main() {
+#[tokio::main]
+async fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
+        .plugin(tauri_plugin_aptabase::Builder::new("A-EU-4502783907").build())
         .manage(AppState {
             sys: Mutex::new(System::new_all()),
+        })
+        .setup(|app| {
+            use tauri_plugin_aptabase::EventTracker;
+            app.track_event("backend_boot_success", None);
+            Ok(())
         })
         .invoke_handler(tauri::generate_handler![
             get_active_ports,
